@@ -1,0 +1,25 @@
+#Hadoop Hive
+
+create database Blesson;
+use Blesson;
+
+#Loading the data from a text file to HIVE
+create table petrol(distributer_id STRING, distributer_name STRING, amt_IN STRING, amy_OUT STRING, vol_IN INT, vol_OUT INT, year INT) row format delimited fields terminated by ',' stored as textfile;
+load data local inpath '/home/cloudera/Desktop/Hive/petrol.txt' into table petrol; -- From local
+select distributer_name, max(amy_out) from petrol group by distributer_name limit 10;
+select distributer_name, min(amy_out) from petrol group by distributer_name order by amy_out desc limit 10;
+
+#Loading the data from a CSV file to HIVE
+create table olympic(athlete STRING, age INT, country STRING, year STRING, closing STRING, sport STRING, gold INT, silver INT, bronze INT, total INT) row format delimited fields terminated by '\t' stored as textfile;
+load data inpath '/olympic/olympic_data.csv' into table olympic; -- From HDFS
+select country, sum(total) from olympic  group by country;
+
+
+[cloudera@quickstart Hive]$ hadoop fs -mkdir /olympic
+[cloudera@quickstart Hive]$ hadoop fs -ls /
+hadoop fs -put olympic_data.csv /olympic/
+hadoop fs -cat /olympic/olympic_data.csv
+
+-get
+-copytolocal
+-copyfromlocal
